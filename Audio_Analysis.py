@@ -83,13 +83,49 @@ class Audio_Loader:
         title - the title of the graph
         """
 
-        fig, ax = plt.subplots()
-        ax.plot(xf, 2.0/sampling_rate * np.abs(yf[0:sampling_rate//2]))
-        ax.grid()
-        ax.set_xlabel("Time (s)")
-        ax.set_ylabel("Amplitude")
-        ax.set_title(title)
-        fig.show()
+        plt.plot(xf, 2.0/sampling_rate * np.abs(yf[0:sampling_rate//2]))
+        plt.grid()
+        plt.xlabel("Time (s)")
+        plt.ylabel("Amplitude")
+        plt.title(title)
+        plt.show()
+
+
+    @staticmethod
+    def spectrogram(samples, sampling_rate):
+        """
+        Generates spectrogram data using the samples and sampling rate
+
+        Parameters
+        samples - the samples
+        sampling_rate - the sampling rate
+
+        Return
+        1. f (frequency?)
+        2. t (time?)
+        3. Sxx ?
+        """
+        
+        return scipy.signal.spectrogram(samples, sampling_rate)
+
+
+    @staticmethod
+    def plot_spectrogram(f, t, Sxx, title="No Title"):
+        """
+        Plots the spectrogram
+
+        Parameters
+        f
+        t
+        Ssx
+        title - the title of the graph
+        """
+        
+        plt.pcolormesh(t, f, Sxx, shading='gouraud')
+        plt.title(title)
+        plt.ylabel('Frequency [Hz]')
+        plt.xlabel('Time [sec]')
+        plt.show()
         
 
 # Usage of the above class
@@ -106,6 +142,12 @@ def main():
 
     Audio_Loader.plot_fft(v_xf, v_yf, v_sampling_rate, "Violin Fourier Transform")
     Audio_Loader.plot_fft(t_xf, t_yf, t_sampling_rate, "Trumpet Fourier Transform")
-    
 
+    v_f, v_t, v_Sxx = Audio_Loader.spectrogram(v_samples, v_sampling_rate)
+    t_f, t_t, t_Sxx = Audio_Loader.spectrogram(t_samples, t_sampling_rate)
+    
+    Audio_Loader.plot_spectrogram(v_f, v_t, v_Sxx, "Violin Spectrogram")
+    Audio_Loader.plot_spectrogram(t_f, t_t, t_Sxx, "Trumpet Spectrogram")
+    
+    
 main()
